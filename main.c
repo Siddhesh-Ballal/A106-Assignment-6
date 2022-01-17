@@ -1,3 +1,8 @@
+//A106 Siddhesh Ballal
+/*
+Assignment 6: Implement stack as an abstract data type using linked list and use this ADT for conversion of infix expression to postfix, prefix, and evaluation of postfix and prefix expression.
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -80,13 +85,41 @@ void pop()
 
 int main() 
 {
-  push(10);
-  push(20);
-  push(30);
-  printf("\n");
-  show();
-  pop();
-  printf("\n");
-  show();
+  int choice, value;
+  do
+  {
+    printf("\n\nChoose: \n1.Push\n2.Pop\n3.Display\n4.Exit\n");
+    printf("Enter your choice: ");
+    scanf("%d", &choice);
+    switch(choice)
+    {
+      case(1):
+      printf("\nEnter value to be pushed: ");
+      scanf("%d", &value);
+      push(value);
+      break;
+
+      case(2):
+      pop();
+      break;
+
+      case(3):
+      show();
+      break;
+
+      case(4):
+      printf("\nProgram exited Successfully");
+
+    }
+  }
+  while(choice != 4);
+  // push(10);
+  // push(20);
+  // push(30);
+  // printf("\n");
+  // show();
+  // pop();
+  // printf("\n");
+  // show();
   return 0;
 }
