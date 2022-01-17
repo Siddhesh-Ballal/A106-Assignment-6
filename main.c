@@ -113,13 +113,6 @@ int main()
     }
   }
   while(choice != 4);
-  // push(10);
-  // push(20);
-  // push(30);
-  // printf("\n");
-  // show();
-  // pop();
-  // printf("\n");
-  // show();
+   
   return 0;
 }
