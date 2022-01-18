@@ -5,114 +5,118 @@ Assignment 6: Implement stack as an abstract data type using linked list and use
 
 #include <stdio.h>
 #include <stdlib.h>
-
-struct node
+#include <string.h>
+ 
+struct stack
 {
-  int data;
-  struct node *next; 
+    int size;
+    int top;
+    char *arr;
 };
-struct node* top;
-
-int is_empty()
-{
-  if (top==NULL)
-  {
-    return 1;
-  }
-  else
-  {
-    return 0;
-  }
+ 
+int stackTop(struct stack* sp){
+    return sp->arr[sp->top];
 }
-
-int is_full()
+ 
+int isEmpty(struct stack *ptr)
 {
-  struct node* temp;
-  temp = (struct node*) malloc (sizeof(struct node));
-  if (temp == NULL)
-  {
-    return 1;
-  }
-  else
-  {
-    return 0;
-  }
-}
-
-struct node* push(int input)
-{
-  if (is_full())
-  {
-    printf("\nStack is full");
-  }
-  else
-  {
-    struct node* temp;
-    temp = (struct node*) malloc (sizeof(struct node));
-    temp -> data = input;
-    temp -> next = top;
-    top = temp;
-    printf("\n%d is inserted",input);
-  }
-  return top;
-}
-
-void show()
-{
-  struct node* p;
-  p = top;
-  while(p != NULL)
-  {
-    printf("%d\t", p->data);
-    p = p->next;
-  }
-}
-
-void pop()
-{
-  if (is_empty())
-  {
-    printf("\nStack is already empty");
-  }
-  else 
-  {
-   struct node* p;
-   p = top;
-   top = top->next;
-   free(p);
-  }
-}
-
-int main() 
-{
-  int choice, value;
-  do
-  {
-    printf("\n\nChoose: \n1.Push\n2.Pop\n3.Display\n4.Exit\n");
-    printf("Enter your choice: ");
-    scanf("%d", &choice);
-    switch(choice)
+    if (ptr->top == -1)
     {
-      case(1):
-      printf("\nEnter value to be pushed: ");
-      scanf("%d", &value);
-      push(value);
-      break;
-
-      case(2):
-      pop();
-      break;
-
-      case(3):
-      show();
-      break;
-
-      case(4):
-      printf("\nProgram exited Successfully");
-
+        return 1;
     }
-  }
-  while(choice != 4);
-   
-  return 0;
+    else
+    {
+        return 0;
+    }
+}
+ 
+int isFull(struct stack *ptr)
+{
+    if (ptr->top == ptr->size - 1)
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+ 
+void push(struct stack* ptr, char val){
+    if(isFull(ptr)){
+        printf("Stack Overflow! Cannot push %d to the stack\n", val);
+    }
+    else{
+        ptr->top++;
+        ptr->arr[ptr->top] = val;
+    }
+}
+ 
+char pop(struct stack* ptr){
+    if(isEmpty(ptr)){
+        printf("Stack Underflow! Cannot pop from the stack\n");
+        return -1;
+    }
+    else{
+        char val = ptr->arr[ptr->top];
+        ptr->top--;
+        return val;
+    }
+}
+int precedence(char ch){
+    if(ch == '*' || ch=='/')
+        return 3;
+    else if(ch == '+' || ch=='-')
+        return 2; 
+    else
+        return 0;
+}
+ 
+int isOperator(char ch){
+    if(ch=='+' || ch=='-' ||ch=='*' || ch=='/') 
+        return 1;
+    else
+        return 0;
+}
+char* infixToPostfix(char* infix){
+    struct stack * sp = (struct stack *) malloc(sizeof(struct stack));
+    sp->size = 10; 
+    sp->top = -1;
+    sp->arr = (char *) malloc(sp->size * sizeof(char));
+    char * postfix = (char *) malloc((strlen(infix)+1) * sizeof(char));
+    int i=0; // Track infix traversal
+    int j = 0; // Track postfix addition 
+    while (infix[i]!='\0')
+    {
+        if(!isOperator(infix[i])){
+            postfix[j] = infix[i];
+            j++;
+            i++;
+        }
+        else{
+            if(precedence(infix[i])> precedence(stackTop(sp))){
+                push(sp, infix[i]);
+                i++;
+            }
+            else{
+                postfix[j] = pop(sp);
+                j++;
+            }
+        }
+    }
+    while (!isEmpty(sp))    
+    {
+        postfix[j] = pop(sp);
+        j++;
+    }
+    postfix[j] = '\0';
+    return postfix;
+}
+int main()
+{
+    char infix[50];
+    printf("\nEnter Infix Expression : ");
+    scanf("%s",infix);
+    printf("postfix is %s", infixToPostfix(infix));
+    return 0;
 }
